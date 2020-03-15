@@ -1,0 +1,231 @@
+#include<iostream>
+#include<cstdlib>
+#include<string.h>
+#include<windows.h>
+#define maxchar 50
+
+using namespace std;
+
+struct nodo{
+    int id;     
+    char nombre[maxchar]; 
+    int edad;
+    char direccion[maxchar];
+    char sexo[maxchar];
+    char fecha[maxchar];
+    int enfermedad;
+    struct nodo *sgte;
+};
+
+typedef struct nodo *PLista;
+
+void menu();
+void registrar_pacientes(PLista &lista);
+void buscar_paciente(PLista lista);
+void consultar_paciente(PLista lista);
+void eliminar_paciente(PLista &lista);
+
+// ************************************************* MAIN ********************************************************************************
+int main(void){
+   
+    PLista lista=NULL;
+    int opcion; 
+    do{
+    	menu();
+        cin>>opcion;
+        system("cls");
+        switch(opcion){
+        	
+			case 1:
+			    registrar_pacientes(lista); //Alta paciente
+            break;
+
+            case 2:
+			    if(lista==NULL){
+			    	cout<"\n\tNo Hay Pacientes Registrados.....!!!!\n";
+                    }else{
+                    buscar_paciente(lista); //Buscar paciente por numero de seguro social
+                }
+            break;
+
+            case 3: 
+			    if(lista==NULL){
+			    	cout<"\n\tNo Hay Pacientes Registrados.....!!!!\n";
+                    }else{
+                    consultar_paciente(lista); //Consultar paciente  Num_seg/Fecha_ing
+                }
+            break;
+
+            case 4: 
+			    if(lista==NULL){
+			    	cout<"\n\tNo Hay Pacientes Registrados.....!!!!\n";
+				    }else{
+					eliminar_paciente(lista); //Baja paciente
+                }
+            break;
+            
+            case 5:
+            	return 0;
+            break;
+
+            default: 
+			    cout<<"\nINGRESE UNA OPCION VALIDA...\n"; 
+			break;
+        }
+    system("pause");  
+	system("cls");
+    }while(opcion!=5);
+    return 0;
+}
+/************************************************FIN MAIN ********************************************************************************/
+
+/*--------------------- FUNCION MENU PRINCIPAL --------------------*/
+void menu(void){
+
+    cout<<"\n\t\t[    REGISTRO DE PACIENTES    ]\n";
+    cout<<"\t\t----------------------------\n\n";
+    cout<<" 1. REGISTRAR A UN PACIENTE                     "<<endl;
+    cout<<" 2. BUSCAR PACIENTE                             "<<endl;
+    cout<<" 3. CONSULTAR PACIENTE                          "<<endl;
+    cout<<" 4. BAJA DE PACIENTE                            "<<endl;
+    cout<<" 5. SALIR                                       "<<endl;
+    cout<<"\n Ingrese opcion : ";
+}
+
+/*-------------------- FUNCION REGISTRAR PACIENTES ------------------*/
+void registrar_pacientes(PLista &lista){
+
+    PLista t,q = new(struct nodo);
+
+    cout<<"\n\n\t\t[  REGISTRO  ]\n";
+    cout<<"\t\t--------------";
+    cin.ignore();cout<<"\n\tNUMERO DE SEGURO: ";                                            cin>>q->id;Sleep(100);
+    cin.ignore();cout<<"\n\tNOMBRE COMPLETO: ";                                             cin.getline(q->nombre,maxchar);Sleep(100);
+    cin.ignore();cout<<"\tEDAD: ";                                                          cin>>q->edad;cout<<endl;Sleep(100);
+    cin.ignore();cout<<"\tDIRECCION: ";                                                     cin.getline(q->direccion,maxchar);Sleep(100);
+    cin.ignore();cout<<"\tSEXO M/F: ";                                                      cin.getline(q->sexo,maxchar);Sleep(100);
+    cin.ignore();cout<<"\tFECHA DE INGRESO (EJEMPLO 30/12/2020): ";                         cin>>q->fecha;Sleep(100); 
+	cin.ignore();cout<<"\n\tENFERMEDADADES 1)GRIPE  2) TOS  3)INFLUENZA  4)OTRA"<<endl;
+	cin.ignore();cout<<"\tENFERMEDAD: ";                                                    cin>>q->enfermedad;Sleep(100);
+    cout<<"\n\tDATOS AGREGADOS CORRECTAMENTE";
+    system("cls");
+    q->sgte = NULL;
+    if(lista==NULL){
+        lista = q;
+    }else{
+        t=lista;
+        while(t->sgte!=NULL){
+        	t = t->sgte;
+        }
+        t->sgte = q;
+    }
+}
+
+/*------------------------ FUNCION ELIMINAR PACIENTE ---------------------*/
+void eliminar_paciente(PLista &lista){
+    int cod,diass=0;
+    float cuenta=0,nuev;
+    PLista q,t;
+    q=lista;
+    cout<<"\n\n\t\t[     ELIMINAR UN PACIENTE     ]\n";
+    cout<<"\t\t--------------------------------\n\n";
+    cout<<"\t\tINGRESE EL NUMERO DE SEGURO SOCIAL: "; cin>>cod;
+    while(q!=NULL){
+    	if(q->id==cod){
+    		if(q==lista)
+                    lista=lista->sgte;
+                else
+                    t->sgte=q->sgte;
+            cout<<"\n\tCUANTOS DIAS ESTUVO "; cin>>diass; //cls
+            cout<<"\n\tPaciente: "<<q->nombre<<endl;
+            if(q->enfermedad==1){
+            	nuev=350;//Costo por dia de gripe
+            	cout<<"\n\tPACIENTE CON GRIPE"<<endl;
+			}
+			if(q->enfermedad==2){
+            	nuev=435.80;//Costo por dia de tos
+            	cout<<"\n\tPACIENTE CON TOS"<<endl;
+			}
+			if(q->enfermedad==3){
+            	nuev=796.40;//Costo por dia de influenza
+            	cout<<"\n\tPACIENTE CON INFLUENZA"<<endl;
+			}
+			if(q->enfermedad==4){
+            	nuev=1200;//Costo por consulta diferente
+            	cout<<"\n\tPACIENTE CON ENFERMEDAD NO ESPECIFICA"<<endl;
+			}
+            cuenta=diass*nuev;
+            cout<<"\n\tLA CUENTA ES DE: "<<cuenta<<" SE LE COBRO "<<nuev<<" POR "<<diass<<" DIAS"<<endl;
+                delete(q);
+                cout<<"\n\t\t**************************************";
+                cout<<"\n\t\t*  EL PACIENTE HA SIDO DADO DE BAJA  *";
+                cout<<"\n\t\t**************************************"<<endl;
+                return;
+            }else{
+            t=q;
+            q=q->sgte;
+        }
+    }
+    if(q==NULL)
+        cout<<"\n\t\tNUMERO DE SEGURO NO REGISTRADO!\n";
+        system("pause"); system("cls");
+}
+
+/*-------------------- FUNCION BUSCAR PACIENTE -------------------*/
+void buscar_paciente(PLista lista){
+    int cod, x;
+    PLista q;
+    q=lista;
+    cout<<"\n\n\tINGRESE EL NUMERO DE SEGURO SOCIAL DEL PACIENTE A BUSCAR: "; cin>>cod;
+    while(q!=NULL){
+    	if(q->id==cod){
+                system("cls");
+                cout<<"\n\t[ DATOS DEL PACIENTE ]";
+                cout<<"\n\t-----------------------";
+                cout<<"\n\tNUMERO DE SEGURO: "<<q->id<<endl;
+                cout<<"\tNOMBRE: "<<q->nombre<<endl;
+                cout<<"\tEDAD: "<<q->edad<<endl;
+                cout<<"\tDIRECCION: "<<q->direccion<<endl;
+                cout<<"\tSEXO: "<<q->sexo<<endl;
+                cout<<"\tFECHA DE INGRESO: "<<q->fecha<<endl;
+                if(q->enfermedad==1){
+            	    cout<<"\tPACIENTE CON GRIPE"<<endl;
+			    }
+			    if(q->enfermedad==2){
+            	    cout<<"\tPACIENTE CON TOS"<<endl;
+		     	}
+			    if(q->enfermedad==3){
+            	    cout<<"\tPACIENTE CON INFLUENZA"<<endl;
+			    }
+			    if(q->enfermedad==4){
+			    	cout<<"\tPACIENTE CON ENFERMEDAD NO ESPECIFICA"<<endl;
+		     	}
+                cout<<"\t-----------------------"<<endl<<endl;
+                return;
+            }else{
+            q=q->sgte;
+        }
+    }
+    if(q==NULL)
+        cout<<"\n\nSEGURO SOCIAL NO REGISTRADO\n";
+}
+
+/*-------------------- FUNCION CONSULTAR PACIENTE -------------------*/
+void consultar_paciente(PLista lista){
+
+    int cod, x;
+    PLista q;
+    q=lista;
+    cout<<"\n\n\tINGRESE EL NUMERO DE SEGURO SOCIAL DEL PACIENTE A BUSCAR: "; cin>>cod;
+    while(q!=NULL){
+    	if(q->id==cod){
+                system("cls");
+                cout<<"\n\tEL PACIENTE ESTA REGISTRADO!\n";
+                return;
+            }else{
+            q=q->sgte;
+        }
+    }
+    if(q==NULL)
+        cout<<"\n\tEL PACIENTE NO ESTA REGISTRADO!\n";
+}
