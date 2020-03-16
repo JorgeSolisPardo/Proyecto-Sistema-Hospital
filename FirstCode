@@ -27,7 +27,7 @@ void eliminar_paciente(PLista &lista);
 
 // ************************************************* MAIN ********************************************************************************
 int main(void){
-   
+    system("color 0a"); 
     PLista lista=NULL;
     int opcion; 
     do{
