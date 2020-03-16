@@ -229,4 +229,4 @@ void consultar_paciente(PLista lista){
     if(q==NULL)
         cout<<"\n\tEL PACIENTE NO ESTA REGISTRADO!\n";
 }
-//FIN DEL CODIGO
+//FIN DEL CODIG
